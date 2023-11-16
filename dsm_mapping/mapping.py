@@ -1,5 +1,6 @@
 import requests
 from . import utils
+from .utils.resultify import resultify
 
 class Mapping:
     
@@ -51,11 +52,16 @@ class Mapping:
         utils.handle.check_http_status_code(response=res)
         return res.json()
     
-    def search(self, text, out_list=True):
+    @resultify
+    def search(self, text, out_list=False):
+        if len(text) < 2:
+            raise Exception("text less than 2 charaters")
         res = requests.get(
             f"{self.services_uri}/project/{self.project_id}/search/?q={text}",
             headers=self._headers,
         )
         utils.handle.check_http_status_code(response=res)
         out = res.json()
-        return out if out_list or not len(out) else out[0]
+        if not len(out):
+            raise Exception("masterdata not found")
+        return out if out_list else out[0]
