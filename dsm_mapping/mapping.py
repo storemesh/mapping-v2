@@ -10,7 +10,7 @@ class Mapping:
             'Authorization': f'Api-Key {api_key}'
         }
         self.project_id = project_id
-        self._get_project_info()
+        return self._get_project_info()
         
     def _get_project_info(self):
         res = requests.get(
