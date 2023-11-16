@@ -1,7 +1,10 @@
 import requests
 from . import utils
 from .utils.resultify import resultify
+from tqdm.auto import tqdm
 
+def chunker(seq, size):
+    return ((pos, seq[pos:pos + size]) for pos in range(0, len(seq), size))
 class Mapping:
     
     def __init__(self, services_uri, api_key, project_id):
@@ -40,16 +43,16 @@ class Mapping:
            column_text : 'text'
         })
         df['project'] = self.project_id
-        
-        datas = df.to_dict('records')
-        res = requests.post(
-            f"{self.services_uri}/master-data/bulk-create/",
-            headers=self._headers,
-            json={
-                'bulk': datas
-            }
-        )
-        utils.handle.check_http_status_code(response=res)
+        for index, _df in tqdm(chunker(df, 1000)):
+            datas = _df.to_dict('records')
+            res = requests.post(
+                f"{self.services_uri}/master-data/bulk-create/",
+                headers=self._headers,
+                json={
+                    'bulk': datas
+                }
+            )
+            utils.handle.check_http_status_code(response=res)
         return res.json()
     
     @resultify
