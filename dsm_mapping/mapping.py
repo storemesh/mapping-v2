@@ -57,7 +57,7 @@ class Mapping:
     
     @resultify
     def search(self, text, out_list=False):
-        if len(text) < 2:
+        if len(text) < 3:
             raise Exception("text less than 2 charaters")
         res = requests.get(
             f"{self.services_uri}/project/{self.project_id}/search/?q={text}",

@@ -1,5 +1,5 @@
 __title__ = 'DigitalStoreMesh Mapping Services'
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 __author__ = 'DigitalStoreMesh Co.,Ltd'
 __license__ = 'MIT'
 
