@@ -2,7 +2,7 @@
 
 - install package
 ```
-pip install -e https://github.com/storemesh/mapping-v2.git
+pip install git+https://github.com/storemesh/mapping-v2.git
 ```
 - declare instance
 ```python
