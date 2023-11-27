@@ -2,6 +2,11 @@ import requests
 from . import utils
 from .utils.resultify import resultify
 from tqdm.auto import tqdm
+import dask.dataframe as dd
+from dask.diagnostics import ProgressBar
+
+import dask
+from multiprocessing.pool import ThreadPool
 
 def chunker(seq, size):
     return ((pos, seq[pos:pos + size]) for pos in range(0, len(seq), size))
@@ -36,23 +41,33 @@ class Mapping:
         utils.handle.check_http_status_code(response=res)
         return res.json()
     
-    def bulk_master_data(self, df, column_id, column_text):
+    def _upload2system(self, df):
+        datas = df.to_dict('records')
+        res = requests.post(
+            f"{self.services_uri}/master-data/bulk-create/",
+            headers=self._headers,
+            json={
+                'bulk': datas
+            }
+        )
+        utils.handle.check_http_status_code(response=res)
+        
+    def bulk_master_data(self, df, column_id, column_text, n_thred=16):
         df = df[[column_id, column_text]]
         df = df.rename(columns={
            column_id : 'master_id',
            column_text : 'text'
         })
         df['project'] = self.project_id
-        for index, _df in tqdm(chunker(df, 1000)):
-            datas = _df.to_dict('records')
-            res = requests.post(
-                f"{self.services_uri}/master-data/bulk-create/",
-                headers=self._headers,
-                json={
-                    'bulk': datas
-                }
-            )
-            utils.handle.check_http_status_code(response=res)
+        ddf  = dd.from_pandas(df, chunksize=100)
+        dask.config.set(pool=ThreadPool(n_thred))
+        with ProgressBar():
+            ddf.map_partitions(self._upload2system).compute()
+        res = requests.get(
+            f"{self.services_uri}/project/index/",
+            headers=self._headers,
+        )
+        utils.handle.check_http_status_code(response=res)
         return res.json()
     
     @resultify
