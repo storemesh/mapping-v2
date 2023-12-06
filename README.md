@@ -2,19 +2,23 @@
 
 - install package
 ```
-pip install git+https://github.com/storemesh/mapping-v2.git
+pip install -U git+https://github.com/storemesh/mapping-v2.git
 ```
 - declare instance
 ```python
 import dsm_mapping
 import pandas as pd
 
-mapping = dsm_mapping.mapping.Mapping(
+mapping = dsm_mapping.mapping.MappingV2(
     services_uri='<services_uri>',
     api_key="<api_key>",
-    project_id=<project_id>
+    master_name='<master_name>'
 )
 ```
+- master choices 
+    ```
+    [ 'country', 'company', 'service', 'product', 'province']
+    ```
 
 - add one
 ```python
@@ -22,14 +26,10 @@ mapping.add_master_data(master_id="glass01", text="แก้วน้ำ")
 ```
 
 - search
-    - search return list
-    ```python
-    mapping.search(text="แก้วน้")
-    ```
-    - search return dict
-    ```python
-    mapping.search(text="แก้วน้", out_list=False)
-    ```
+```python
+mapping.search(text="แก้วน้")
+```
+
 
 - bulk create via dataframe
 
