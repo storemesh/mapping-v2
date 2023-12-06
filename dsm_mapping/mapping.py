@@ -124,7 +124,7 @@ class MappingV2:
     def bulk_master_data(self, df, column_id, column_text, n_thred=16):
         df = df[[column_id, column_text]]
         df = df.rename(columns={
-           column_id : 'id',
+           column_id : '_id',
            column_text : 'text'
         })
         ddf  = dd.from_pandas(df, chunksize=1000)
@@ -152,22 +152,25 @@ class MappingV2:
             raise Exception("masterdata not found")
         return out if out_list else out[0]
     
-    def query(self, ddf, query_col):
-        output = ddf.map_partitions(lambda df: self._query(df=df, query_col=query_col) , meta=tuple).compute()
-        out1, out2 = zip(*output)
+    # def query(self, ddf, query_col):
+    #     result = ddf.map_partitions(lambda df: self._query(df=df, query_col=query_col), meta=pd.DataFrame)
 
-        ddf = ddf.assign(_key_id = pd.Series(out1))
-        ddf = ddf.assign(_key_text = pd.Series(out2))
-        return ddf
+    #     # ddf = ddf.assign(_key_id = pd.Series(out1))
+    #     # ddf = ddf.assign(_key_text = pd.Series(out2))
+    #     ddf = ddf.assign()
+    #     return ddf
     
-    def _query(self, df, query_col):
-        q = df[query_col].tolist()
-        res = requests.post(
-            f"{self.services_uri}/{self.master_name}/query/",
-            headers=self._headers,
-            json={
-                "bulk": q
-            }
-        )
-        out = res.json()
-        return [elm.get('id') for elm in out], [elm.get('text') for elm in out]
+    # def _query(self, df, query_col):
+    #     q = df[query_col].tolist()
+    #     res = requests.post(
+    #         f"{self.services_uri}/{self.master_name}/query/",
+    #         headers=self._headers,
+    #         json={
+    #             "bulk": q
+    #         }
+    #     )
+    #     out = res.json()
+    #     df = df.assign(_key_id =[elm.get('_id') for elm in out])
+    #     df = df.assign(_key_text =[elm.get('text') for elm in out])
+    #     # return [elm.get('_id') for elm in out], [elm.get('text') for elm in out]
+    #     return df
