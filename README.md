@@ -1,5 +1,6 @@
 # mapping-v2
 
+## Mapping
 - install package
 ```
 pip install -U git+https://github.com/storemesh/mapping-v2.git
@@ -36,4 +37,10 @@ mapping.search(text="แก้วน้")
 ```python
 df = pd.read_csv('<data path>')
 mapping.bulk_master_data(df=df, column_id='<column_id>', column_text='<column_text>')
+```
+
+## MDM
+
+```
+pip install git+https://github.com/storemesh/mapping-v2.git#egg=dsm_mapping[mdm]
 ```
