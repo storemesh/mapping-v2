@@ -55,7 +55,7 @@ class MDMorganiztion:
     def mapping(self, query, thresh=0.6):
         data = self.mdm(query=query)
         if data.get('score') >= thresh:
-            return data.get('id')
+            return data.get('mdm')
         return ""
         
 class MDMperson:
