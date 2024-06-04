@@ -6,3 +6,4 @@ __license__ = 'MIT'
 VERSION = __version__
 
 from . import mapping
+from . import mdm

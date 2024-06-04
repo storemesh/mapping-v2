@@ -43,5 +43,12 @@ setup(
        'requests',
        'pandas',
        'tqdm'
-    ]
+    ],
+    extras_require={
+        'mdm': [
+            "transformers==4.39.2",
+            "redis==5.0.3",
+            "scikit-learn==1.4.1.post1"
+        ]
+    }
 )
