@@ -3,8 +3,10 @@ import json
 import pickle
 import numpy as np
 import re
-from sklearn.feature_extraction.text import TfidfVectorizer
 from rank_bm25 import BM25Okapi
+from tqdm.auto import tqdm
+from sklearn.feature_extraction.text import TfidfVectorizer
+
 from .tokenizer import TrigramsTokenizer, RobertaTokenize
 
 class MDMorganiztion:

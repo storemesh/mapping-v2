@@ -48,7 +48,9 @@ setup(
         'mdm': [
             "transformers==4.39.2",
             "redis",
-            "scikit-learn"
+            "scikit-learn",
+            "rank-bm25",
+            "sentencepiece"
         ]
     }
 )
