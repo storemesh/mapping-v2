@@ -11,7 +11,7 @@ from .tokenizer import TrigramsTokenizer, RobertaTokenize
 
 class MDMorganiztion:
     def __init__(self, redis_url="redis://localhost:6379", verbose=False):
-        self.verpose = verbose
+        self.verbose = verbose
         self.redis_con = redis.from_url(f"{redis_url}/10")
         if self.redis_con.ping() == False:
             raise Exception(f"Can not connect to redis {redis_url}")
